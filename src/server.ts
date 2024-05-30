@@ -6,48 +6,8 @@ const app = express()
 
 app.use(express.json())
 
-// app.post('/user', async (req, res) => {
-//   const { name, location } = req.body
-//   try {
-//     const response: any = (await prisma.$queryRaw`
-//     insert into "User" ("name", "location") values
-//     (${name}, "public"."st_point"(${location.lng}, ${location.lat}))
-//     returning id`) as any
-
-//     res.json({
-//       success: true,
-//       id: response[0].id,
-//     })
-//   } catch (e) {
-//     console.error(e)
-//     res.status(500).json({
-//       error: 'Server error!',
-//     })
-//   }
-// })
-
-// app.post('/location', async (req, res) => {
-//   const { name, location } = req.body
-//   try {
-//     await prisma.$queryRaw`
-//     insert into "Location" ("name", "location") values
-//     (${name}, "public"."st_point"(${location.lng}, ${location.lat}))
-//     `
-
-//     res.json({
-//       success: true,
-//     })
-//   } catch (e) {
-//     console.error(e)
-//     res.status(500).json({
-//       error: 'Server error!',
-//     })
-//   }
-// })
-
+// 列表
 app.get(`/dashboard`, async (req, res) => {
-
-
   try {
     const list = await prisma.dashboard.findMany({
       orderBy: {
@@ -62,6 +22,84 @@ app.get(`/dashboard`, async (req, res) => {
       error: 'Server error!',
     })
   }
+})
+// 详情
+app.get(`/dashboard/:id`, async (req, res) => {
+  try {
+    const id = req.params.id
+    const list = await prisma.dashboard.findUnique({
+      where: {
+        id: Number(id)
+      },
+
+    })
+
+    res.json({ data: list })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({
+      error: 'Server error!',
+    })
+  }
+})
+// 新增
+app.post(`/dashboard`, async (req, res) => {
+  try {
+    const body = req.body;
+    const result = await prisma.dashboard.create({
+      data: {
+        ...body
+      }
+
+    })
+
+    res.json({ data: result })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({
+      error: 'Server error!',
+    })
+  }
+})
+// 修改
+app.put(`/dashboard/:id`, async (req, res) => {
+  try {
+    const id = req.params.id
+    const body = req.body;
+    const result = await prisma.dashboard.update({
+      where: {
+        id: Number(id)
+      },
+      data: {
+        ...body
+      }
+
+    })
+
+    res.json({ data: result })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({
+      error: 'Server error!',
+    })
+  }
+})
+// 删除
+app.delete(`/dashboard/:id`, async (req, res) => {
+  try {
+    const id = req.params.id
+    await prisma.dashboard.delete({
+      where: {
+        id: Number(id)
+      }
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({
+      error: 'Server error!',
+    })
+  }
+
 })
 
 export { app }
