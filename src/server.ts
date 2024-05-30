@@ -88,11 +88,12 @@ app.put(`/dashboard/:id`, async (req, res) => {
 app.delete(`/dashboard/:id`, async (req, res) => {
   try {
     const id = req.params.id
-    await prisma.dashboard.delete({
+    const result = await prisma.dashboard.delete({
       where: {
         id: Number(id)
       }
     })
+    res.json({ data: result })
   } catch (error) {
     console.error(error)
     res.status(500).json({
