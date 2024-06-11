@@ -23,3 +23,48 @@ model Dashboard {
 
   @@unique([name, userId])
 }
+
+model ApiGroup {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  name      String
+  ApiManage ApiManage[]
+
+  @@unique([name])
+}
+
+model ApiBaseName {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  value     String
+  ApiManage ApiManage[]
+
+  @@unique([value])
+}
+
+model ApiOrigin {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  value     String
+  ApiManage ApiManage[]
+
+  @@unique([value])
+}
+
+model ApiManage {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  name        String
+  description String   @default("")
+
+  url        String
+  method     String
+  groupId    String?
+  group      ApiGroup?    @relation(fields: [groupId], references: [id])
+  baseNameId String?
+  baseName   ApiBaseName? @relation(fields: [baseNameId], references: [id])
+  originId   String?
+  origin     ApiOrigin?   @relation(fields: [originId], references: [id])
+
+  @@unique([name])
+}

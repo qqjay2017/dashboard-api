@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import express from 'express'
 
 export const prisma = new PrismaClient()
@@ -101,6 +102,63 @@ app.delete(`/dashboard/:id`, async (req, res) => {
     })
   }
 
+})
+
+// 新建分组
+app.post('/api-manage/group', async (req, res) => {
+  try {
+    const body = req.body;
+    const result = await prisma.apiGroup.create({
+      data: {
+        ...body
+      }
+
+    })
+
+    res.json({ data: result })
+  } catch (e: any) {
+
+    res.status(500).json({
+      error: e.message || 'Server error!',
+    })
+  }
+})
+// 分组下拉列表
+app.get('/api-manage/group/list', async (req, res) => {
+  try {
+    const result = await prisma.apiGroup.findMany({
+
+
+    })
+
+    res.json({ data: result })
+  } catch (e: any) {
+
+    res.status(500).json({
+      error: e.message || 'Server error!',
+    })
+  }
+})
+
+// 新建api
+app.post('/api-manage/create', async (req, res) => {
+  try {
+    const body = req.body;
+    const result = await prisma.apiManage.create({
+      data: {
+        ...body
+      }
+
+
+    })
+
+    res.json({ data: result })
+  } catch (e: any) {
+
+    res.status(500).json({
+      error: e.message || 'Server error!',
+    })
+  }
 })
 
 export { app }
