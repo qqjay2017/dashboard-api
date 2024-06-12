@@ -36,19 +36,19 @@ model ApiGroup {
 model ApiBaseName {
   id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
-  value     String
+  baseName  String
   ApiManage ApiManage[]
 
-  @@unique([value])
+  @@unique([baseName])
 }
 
 model ApiOrigin {
   id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
-  value     String
+  origin    String
   ApiManage ApiManage[]
 
-  @@unique([value])
+  @@unique([origin])
 }
 
 model ApiManage {
