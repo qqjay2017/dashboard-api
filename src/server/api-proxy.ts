@@ -13,7 +13,10 @@ export const prisma = new PrismaClient()
 app.post(`/proxy`, async (req, res) => {
     try {
         const body = req.body;
-        const { apiId, data, origin: originParam } = body
+
+        const { authorization, ct, pt, fp,
+        } = req.headers
+        const { apiId, data, origin: originParam, headers: headersParam = {} } = body
         if (!apiId) {
             return errorRes({
                 res,
@@ -33,27 +36,44 @@ app.post(`/proxy`, async (req, res) => {
         // 请求域名
         const origin = apiConfig?.origin?.origin || originParam;
         const method = (apiConfig?.method || 'get').toLowerCase()
-        const url = join(origin, apiConfig?.baseName?.baseName || '', apiConfig?.url || '')
+        const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '')
+        console.log(url, method, 'url')
+        // console.log(apiConfig, 'apiConfig')
 
-        console.log(apiConfig, 'apiConfig')
+        const requestIns = request(method, url)
 
-        const b = request(method, url)
-        // b.set()
 
-        if (method == 'get') {
-            b.query(data)
-        } else {
-            b.send(data)
+        if (authorization) {
+            requestIns.set("Authorization", authorization)
         }
-        b.end((err, proxyRes) => {
+        if (ct) {
+            requestIns.set("ct", String(ct))
+        }
+        if (pt) {
+            requestIns.set("pt", String(pt))
+        }
+        if (fp) {
+            requestIns.set("fp", String(fp))
+        }
+        requestIns.set("User-Agent", String(req.headers['user-agent'] || "Apifox/1.0.0 (https://apifox.com)"))
+
+
+        Reflect.ownKeys(headersParam).forEach((key) => {
+            requestIns.set(String(key), String(headersParam[key] || ''))
+        })
+
+
+        // if (method == 'get') {
+        //     requestIns.query(data)
+        // } else {
+        //     requestIns.send(data)
+        // }
+        requestIns.end((err, proxyRes) => {
             if (err) {
-                console.log(err, 'err')
-                return errorRes({
-                    res,
-                    error: err,
-                })
+                console.log(err, 'request')
+                return res.status(err.status).json(err.response.body)
             }
-            console.log(proxyRes, 'proxyRes')
+            // console.log(proxyRes, 'proxyRes')
 
             res.json(proxyRes?.body)
 
