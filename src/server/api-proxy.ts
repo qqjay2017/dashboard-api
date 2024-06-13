@@ -19,8 +19,39 @@ const headerKeys = [
     'accept-encoding',
     'accept',
     'content-type',
-    'cache-control'
+    'cache-control',
+    'transfer-encoding',
+    'access-control-allow-credentials',
+    "content-security-policy",
+    'x-content-type-options',
+    'strict-transport-security',
+    'x-frame-options',
+    'x-xss-protection',
+    'referrer-policy',
+    'access-control-allow-methods',
+    'expires',
+    'access-control-max-age',
+    'access-control-allow-headers',
+    'access-control-expose-headers',
+    'date',
+    'access-control-allow-origin',
 ]
+
+const proxyResHeaderKeys = ['access_token',
+    'access-control-allow-credentials',
+    "content-security-policy",
+    'x-content-type-options',
+    'strict-transport-security',
+    'x-frame-options',
+    'x-xss-protection',
+    'referrer-policy',
+    'access-control-allow-methods',
+    'expires',
+    'access-control-max-age',
+    'access-control-allow-headers',
+    'access-control-expose-headers',
+    'date',
+    'access-control-allow-origin',]
 const app = express.Router()
 
 
@@ -68,33 +99,36 @@ app.post(`/proxy`, async (req, res) => {
                 requestIns.set(key, String(allHeaders[key]))
             }
         })
-        // requestIns.then((proxyRes) => {
-        //     console.log(proxyRes, 'proxyRes22')
+        const proxyRes = await requestIns
+        // requestIns.end((err, proxyRes) => {
+        //     // console.log(err, proxyRes, "err, proxyRes")
+
+        //     if (err) {
+        //         console.log(err, 'request')
+        //         return res.status(err.status).json(err.response.body)
+        //     }
+
+
+
+
+        //     console.log(proxyRes?.body, 'proxyRes')
+
+        //     return res.status(proxyRes?.status).json(proxyRes?.body || {})
 
         // })
-        requestIns.end((err, proxyRes) => {
-            console.log(err, proxyRes, "err, proxyRes")
 
-            if (err) {
-                console.log(err, 'request')
-                // Reflect.ownKeys(err?.response?.headers || {}).forEach((k) => {
-                //     const key = String(k)
-                //     res.set(key, String(proxyRes.headers[key] || ''))
-                // })
-                res.status(err.status).json(err.response.body)
-            }
-            // console.log(proxyRes, 'proxyRes')
-            // console.log(proxyRes, 'proxyRes')
-            console.log(proxyRes.headers, 'proxyRes.headers')
-            Reflect.ownKeys(proxyRes.headers).forEach((k) => {
-                const key = String(k)
+        Reflect.ownKeys(proxyRes.headers).forEach((k) => {
+            const key = String(k)
+            if (proxyResHeaderKeys.includes(key)) {
                 const value = proxyRes.headers[key]
+
                 res.set(key, value)
-            })
-
-            res.json(proxyRes?.body || {})
-
+            }
         })
+
+        return res.status(proxyRes?.status).json(proxyRes?.body || {})
+
+
 
     } catch (e) {
         console.error(e, 'eee')
