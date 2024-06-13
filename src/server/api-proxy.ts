@@ -58,20 +58,18 @@ const app = express.Router()
 export const prisma = new PrismaClient()
 
 
+
+
 // 新增
 app.post(`/proxy`, async (req, res) => {
     try {
         const body = req.body;
-
-        // const { authorization, ct, pt, fp,
-        // } = req.headers
         const { apiId, data, origin: originParam, headers: headersParam = {} } = body
         if (!apiId) {
             return errorRes({
                 res,
                 message: 'apiId必传'
             })
-
         }
         const apiConfig = await prisma.apiManage.findFirst({
             where: {
@@ -82,54 +80,29 @@ app.post(`/proxy`, async (req, res) => {
                 baseName: true
             }
         })
+
         // 请求域名
         const origin = apiConfig?.origin?.origin || originParam;
         const method = (apiConfig?.method || 'get').toLowerCase()
         const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '')
-        // console.log(apiConfig, 'apiConfig')
-
         const requestIns = request(method, url)
-        const allHeaders = {
+        let allHeaders = {
             ...req.headers,
+
+
+        };
+        (apiConfig?.headers || []).forEach((item: any) => {
+            allHeaders[item.headerKey] = item.headerValue
+        });
+        allHeaders = {
+            ...allHeaders,
             ...headersParam
         }
-        Reflect.ownKeys(allHeaders).forEach((k) => {
-            const key = String(k).toLowerCase();
-            if (headerKeys.includes(key)) {
-                requestIns.set(key, String(allHeaders[key]))
-            }
+        return handleProxy({
+            requestIns,
+            allHeaders,
+            res
         })
-        const proxyRes = await requestIns
-        // requestIns.end((err, proxyRes) => {
-        //     // console.log(err, proxyRes, "err, proxyRes")
-
-        //     if (err) {
-        //         console.log(err, 'request')
-        //         return res.status(err.status).json(err.response.body)
-        //     }
-
-
-
-
-        //     console.log(proxyRes?.body, 'proxyRes')
-
-        //     return res.status(proxyRes?.status).json(proxyRes?.body || {})
-
-        // })
-
-        Reflect.ownKeys(proxyRes.headers).forEach((k) => {
-            const key = String(k)
-            if (proxyResHeaderKeys.includes(key)) {
-                const value = proxyRes.headers[key]
-
-                res.set(key, value)
-            }
-        })
-
-        return res.status(proxyRes?.status).json(proxyRes?.body || {})
-
-
-
     } catch (e) {
         console.error(e, 'eee')
         res.status(500).json({
@@ -137,5 +110,81 @@ app.post(`/proxy`, async (req, res) => {
         })
     }
 })
+
+
+app.post('/proxy-test', async (req, res) => {
+    const body = req.body;
+
+    const { data, origin: originParam, headers: headersParam = {}, formValues = {} } = body
+    const { originId, baseNameId, headers: headersParam2 = [] } = formValues;
+    let origin = originParam;
+    let baseName = '';
+    if (originId) {
+        const o = await prisma.apiOrigin.findFirst({
+            where: {
+                id: originId
+            }
+        })
+        if (o && o.origin) {
+            origin = o.origin
+        }
+    }
+    if (baseNameId) {
+        const b = await prisma.apiBaseName.findFirst({
+            where: {
+                id: baseNameId
+            }
+        })
+        if (b && b.baseName) {
+            baseName = b.baseName
+        }
+    }
+    const url = origin + join(baseName || '', formValues.url || '')
+    const method = (formValues?.method || 'get').toLowerCase()
+    const requestIns = request(method, url)
+    let allHeaders = {
+        ...req.headers,
+        ...headersParam2,
+
+    };
+    (headersParam2 || []).forEach((item: any) => {
+        allHeaders[item.headerKey] = item.headerValue
+    });
+
+    allHeaders = {
+        ...allHeaders,
+        ...headersParam
+    };
+
+
+    return handleProxy({
+        requestIns,
+        allHeaders,
+        res
+    })
+})
+
+async function handleProxy({
+    allHeaders,
+    requestIns,
+    res
+}: any) {
+    Reflect.ownKeys(allHeaders).forEach((k) => {
+        const key = String(k).toLowerCase();
+        if (headerKeys.includes(key)) {
+            requestIns.set(key, String(allHeaders[key]))
+        }
+    })
+    const proxyRes = await requestIns
+    Reflect.ownKeys(proxyRes.headers).forEach((k) => {
+        const key = String(k)
+        if (proxyResHeaderKeys.includes(key)) {
+            const value = proxyRes.headers[key]
+
+            res.set(key, value)
+        }
+    })
+    return res.status(proxyRes?.status).json(proxyRes?.body || {})
+}
 
 export default app

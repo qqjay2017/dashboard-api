@@ -65,6 +65,7 @@ model ApiManage {
   baseName   ApiBaseName? @relation(fields: [baseNameId], references: [id])
   originId   String?
   origin     ApiOrigin?   @relation(fields: [originId], references: [id])
+  headers    Json[]
 
   @@unique([name])
 }
