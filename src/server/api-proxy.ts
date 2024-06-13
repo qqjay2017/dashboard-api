@@ -3,6 +3,24 @@ import express from "express";
 import request from "superagent";
 import { PrismaClient } from '@prisma/client'
 import { errorRes } from "../utils";
+
+
+const headerKeys = [
+    'fp',
+    'ct',
+    'pt',
+    'authorization',
+    'user-agent',
+    'system-id',
+    'access_token',
+    'host',
+    'origin',
+    'cookie',
+    'accept-encoding',
+    'accept',
+    'content-type',
+    'cache-control'
+]
 const app = express.Router()
 
 
@@ -14,8 +32,8 @@ app.post(`/proxy`, async (req, res) => {
     try {
         const body = req.body;
 
-        const { authorization, ct, pt, fp,
-        } = req.headers
+        // const { authorization, ct, pt, fp,
+        // } = req.headers
         const { apiId, data, origin: originParam, headers: headersParam = {} } = body
         if (!apiId) {
             return errorRes({
@@ -37,55 +55,49 @@ app.post(`/proxy`, async (req, res) => {
         const origin = apiConfig?.origin?.origin || originParam;
         const method = (apiConfig?.method || 'get').toLowerCase()
         const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '')
-        console.log(url, method, 'url')
         // console.log(apiConfig, 'apiConfig')
 
         const requestIns = request(method, url)
-
-
-        if (authorization) {
-            requestIns.set("Authorization", authorization)
+        const allHeaders = {
+            ...req.headers,
+            ...headersParam
         }
-        if (ct) {
-            requestIns.set("ct", String(ct))
-        }
-        if (pt) {
-            requestIns.set("pt", String(pt))
-        }
-        if (fp) {
-            requestIns.set("fp", String(fp))
-        }
-        requestIns.set("User-Agent", String(req.headers['user-agent'] || "Apifox/1.0.0 (https://apifox.com)"))
-
-
-        Reflect.ownKeys(headersParam).forEach((key) => {
-            requestIns.set(String(key), String(headersParam[key] || ''))
+        Reflect.ownKeys(allHeaders).forEach((k) => {
+            const key = String(k).toLowerCase();
+            if (headerKeys.includes(key)) {
+                requestIns.set(key, String(allHeaders[key]))
+            }
         })
+        // requestIns.then((proxyRes) => {
+        //     console.log(proxyRes, 'proxyRes22')
 
-
-        // if (method == 'get') {
-        //     requestIns.query(data)
-        // } else {
-        //     requestIns.send(data)
-        // }
+        // })
         requestIns.end((err, proxyRes) => {
+            console.log(err, proxyRes, "err, proxyRes")
+
             if (err) {
                 console.log(err, 'request')
-                return res.status(err.status).json(err.response.body)
+                // Reflect.ownKeys(err?.response?.headers || {}).forEach((k) => {
+                //     const key = String(k)
+                //     res.set(key, String(proxyRes.headers[key] || ''))
+                // })
+                res.status(err.status).json(err.response.body)
             }
             // console.log(proxyRes, 'proxyRes')
+            // console.log(proxyRes, 'proxyRes')
+            console.log(proxyRes.headers, 'proxyRes.headers')
+            Reflect.ownKeys(proxyRes.headers).forEach((k) => {
+                const key = String(k)
+                const value = proxyRes.headers[key]
+                res.set(key, value)
+            })
 
-            res.json(proxyRes?.body)
+            res.json(proxyRes?.body || {})
 
         })
 
-
-
-
-
-
     } catch (e) {
-        console.error(e)
+        console.error(e, 'eee')
         res.status(500).json({
             error: 'Server error!',
         })
