@@ -66,6 +66,8 @@ model ApiManage {
   originId   String?
   origin     ApiOrigin?   @relation(fields: [originId], references: [id])
   headers    Json[]
+  isMock     Boolean?     @default(false)
+  mockJson   String?      @default("{}")
 
   @@unique([name])
 }

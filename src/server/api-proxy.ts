@@ -79,7 +79,14 @@ app.post(`/proxy`, async (req, res) => {
                 origin: true,
                 baseName: true
             }
-        })
+        });
+        if (!apiConfig) {
+            return errorRes({
+                res,
+                message: '没有找到配置'
+            })
+
+        }
 
         // 请求域名
         const origin = apiConfig?.origin?.origin || originParam;
