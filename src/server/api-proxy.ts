@@ -87,6 +87,10 @@ app.post(`/proxy`, async (req, res) => {
             })
 
         }
+        // mock模式,直接返回json
+        if (apiConfig.isMock) {
+            return res.status(200).send(JSON.parse(apiConfig.mockJson || "{}"))
+        }
 
         // 请求域名
         const origin = apiConfig?.origin?.origin || originParam;
@@ -110,65 +114,76 @@ app.post(`/proxy`, async (req, res) => {
             allHeaders,
             res
         })
-    } catch (e) {
-        console.error(e, 'eee')
+    } catch (e: any) {
+
         res.status(500).json({
-            error: 'Server error!',
+            error: e.message || 'Server error!',
         })
     }
 })
 
 
 app.post('/proxy-test', async (req, res) => {
-    const body = req.body;
+    try {
+        const body = req.body;
 
-    const { data, origin: originParam, headers: headersParam = {}, formValues = {} } = body
-    const { originId, baseNameId, headers: headersParam2 = [] } = formValues;
-    let origin = originParam;
-    let baseName = '';
-    if (originId) {
-        const o = await prisma.apiOrigin.findFirst({
-            where: {
-                id: originId
-            }
-        })
-        if (o && o.origin) {
-            origin = o.origin
+        const { data, origin: originParam, headers: headersParam = {}, formValues = {}, } = body
+        const { originId, baseNameId, headers: headersParam2 = [], isMock = false, mockJson } = formValues;
+        if (isMock) {
+
+            return res.status(200).send(typeof mockJson === 'string' ? JSON.parse(mockJson || "{}") : mockJson)
         }
-    }
-    if (baseNameId) {
-        const b = await prisma.apiBaseName.findFirst({
-            where: {
-                id: baseNameId
+        let origin = originParam;
+        let baseName = '';
+        if (originId) {
+            const o = await prisma.apiOrigin.findFirst({
+                where: {
+                    id: originId
+                }
+            })
+            if (o && o.origin) {
+                origin = o.origin
             }
-        })
-        if (b && b.baseName) {
-            baseName = b.baseName
         }
+        if (baseNameId) {
+            const b = await prisma.apiBaseName.findFirst({
+                where: {
+                    id: baseNameId
+                }
+            })
+            if (b && b.baseName) {
+                baseName = b.baseName
+            }
+        }
+        const url = origin + join(baseName || '', formValues.url || '')
+        const method = (formValues?.method || 'get').toLowerCase()
+        const requestIns = request(method, url)
+        let allHeaders = {
+            ...req.headers,
+            ...headersParam2,
+
+        };
+        (headersParam2 || []).forEach((item: any) => {
+            allHeaders[item.headerKey] = item.headerValue
+        });
+
+        allHeaders = {
+            ...allHeaders,
+            ...headersParam
+        };
+
+
+        return handleProxy({
+            requestIns,
+            allHeaders,
+            res
+        })
+    } catch (error: any) {
+
+        res.status(500).json({
+            error: error.message || 'Server error!',
+        })
     }
-    const url = origin + join(baseName || '', formValues.url || '')
-    const method = (formValues?.method || 'get').toLowerCase()
-    const requestIns = request(method, url)
-    let allHeaders = {
-        ...req.headers,
-        ...headersParam2,
-
-    };
-    (headersParam2 || []).forEach((item: any) => {
-        allHeaders[item.headerKey] = item.headerValue
-    });
-
-    allHeaders = {
-        ...allHeaders,
-        ...headersParam
-    };
-
-
-    return handleProxy({
-        requestIns,
-        allHeaders,
-        res
-    })
 })
 
 async function handleProxy({

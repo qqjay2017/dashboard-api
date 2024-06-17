@@ -11,6 +11,7 @@ model Dashboard {
   id          Int      @id @default(autoincrement())
   userId      String
   createdAt   DateTime @default(now())
+  updateAt    DateTime @default(now())
   published   Boolean  @default(false)
   name        String
   description String   @default("")
@@ -27,6 +28,7 @@ model Dashboard {
 model ApiGroup {
   id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
+  updateAt  DateTime    @default(now())
   name      String
   ApiManage ApiManage[]
 
@@ -36,6 +38,7 @@ model ApiGroup {
 model ApiBaseName {
   id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
+  updateAt  DateTime    @default(now())
   baseName  String
   ApiManage ApiManage[]
 
@@ -45,6 +48,7 @@ model ApiBaseName {
 model ApiOrigin {
   id        String      @id @default(uuid())
   createdAt DateTime    @default(now())
+  updateAt  DateTime    @default(now())
   origin    String
   ApiManage ApiManage[]
 
@@ -54,6 +58,7 @@ model ApiOrigin {
 model ApiManage {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
+  updateAt    DateTime @default(now())
   name        String
   description String   @default("")
 

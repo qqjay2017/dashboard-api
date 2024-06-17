@@ -1,5 +1,8 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client'
+import { apiManageSchema } from "../schemas";
+import { errorRes } from "../utils";
+import { getUpdateAt } from "../utils";
 const app = express.Router()
 
 
@@ -30,7 +33,9 @@ app.post('/group', async (req, res) => {
 app.get('/group/list', async (req, res) => {
     try {
         const result = await prisma.apiGroup.findMany({
-
+            orderBy: {
+                createdAt: 'desc'
+            }
 
         })
 
@@ -68,7 +73,9 @@ app.get('/baseName/list', async (req, res) => {
     try {
         const result = await prisma.apiBaseName.findMany({
 
-
+            orderBy: {
+                createdAt: 'desc'
+            }
         })
 
         res.json({ data: result })
@@ -103,7 +110,9 @@ app.post('/origin', async (req, res) => {
 app.get('/origin/list', async (req, res) => {
     try {
         const result = await prisma.apiOrigin.findMany({
-
+            orderBy: {
+                createdAt: 'desc'
+            }
 
         })
 
@@ -142,7 +151,9 @@ app.post('/create', async (req, res) => {
 app.get('/list', async (req, res) => {
     try {
         const result = await prisma.apiManage.findMany({
-
+            orderBy: {
+                createdAt: 'desc'
+            },
             include: {
                 origin: true,
                 baseName: true,
@@ -193,12 +204,23 @@ app.put('/edit/:id', async (req, res) => {
         const id = req.params.id
         console.log(id, 'id')
         const body = req.body;
+        const { success, data, error } = apiManageSchema.safeParse(body)
+
+
+        if (!success) {
+            return errorRes({
+                res,
+                message: error.toString()
+            })
+        }
+
         const result = await prisma.apiManage.update({
             where: {
                 id
             },
             data: {
-                ...body
+                ...data,
+                ...getUpdateAt(),
             }
 
 

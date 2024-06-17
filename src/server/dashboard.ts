@@ -1,5 +1,6 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client'
+import { getUpdateAt } from "../utils";
 const app = express.Router()
 
 
@@ -70,7 +71,8 @@ app.put(`/:id`, async (req, res) => {
                 id: Number(id)
             },
             data: {
-                ...body
+                ...body,
+                ...getUpdateAt(),
             }
 
         })
