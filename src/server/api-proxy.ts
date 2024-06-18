@@ -13,9 +13,9 @@ const headerKeys = [
     'user-agent',
     'system-id',
     'access_token',
-    'host',
-    'origin',
-    'cookie',
+    // 'host',
+    // 'origin',
+    // 'cookie',
     'accept-encoding',
     'accept',
     'content-type',
@@ -95,7 +95,8 @@ app.post(`/proxy`, async (req, res) => {
         // 请求域名
         const origin = apiConfig?.origin?.origin || originParam;
         const method = (apiConfig?.method || 'get').toLowerCase()
-        const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '')
+        const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '');
+        console.log(url, method, 'url')
         const requestIns = request(method, url)
         let allHeaders = {
             ...req.headers,
@@ -109,6 +110,7 @@ app.post(`/proxy`, async (req, res) => {
             ...allHeaders,
             ...headersParam
         }
+
         return handleProxy({
             requestIns,
             allHeaders,
