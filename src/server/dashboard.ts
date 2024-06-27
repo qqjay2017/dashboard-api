@@ -12,7 +12,21 @@ app.get(`/`, async (req, res) => {
         const list = await prisma.dashboard.findMany({
             orderBy: {
                 createdAt: 'desc'
+            },
+            select: {
+                id: true,
+                userId: true,
+                createdAt: true,
+                updateAt: true,
+                published: true,
+                name: true,
+                coverThumbnail: true,
+                description: true,
+                visits: true,
+                submissions: true,
+                shareURL: true
             }
+
         })
 
         res.json({ data: list })
@@ -31,6 +45,19 @@ app.get(`/:id`, async (req, res) => {
             where: {
                 id: Number(id)
             },
+            select: {
+                id: true,
+                userId: true,
+                createdAt: true,
+                updateAt: true,
+                published: true,
+                name: true,
+                content: true,
+                description: true,
+                visits: true,
+                submissions: true,
+                shareURL: true
+            }
 
         })
 
