@@ -131,4 +131,37 @@ app.delete(`/:id`, async (req, res) => {
 
 })
 
+
+// 预览详情
+app.get(`/preview/:id`, async (req, res) => {
+    try {
+        const id = req.params.id
+        const list = await prisma.dashboard.findUnique({
+            where: {
+                shareURL: id
+            },
+            select: {
+                id: true,
+                userId: true,
+                createdAt: true,
+                updateAt: true,
+                published: true,
+                name: true,
+                content: true,
+                description: true,
+                visits: true,
+                submissions: true,
+                shareURL: true
+            }
+
+        })
+
+        res.json({ data: list })
+    } catch (e) {
+        console.error(e)
+        res.status(500).json({
+            error: 'Server error!',
+        })
+    }
+})
 export default app
