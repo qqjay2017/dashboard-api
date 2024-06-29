@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { apiManageSchema } from "../schemas";
 import { errorRes } from "../utils";
 import { getUpdateAt } from "../utils";
+import contentDisposition from 'content-disposition'
 const app = express.Router()
 
 
@@ -235,5 +236,75 @@ app.put('/edit/:id', async (req, res) => {
     }
 })
 
+
+app.post("/export", async (req, res) => {
+    try {
+        const apiGroup = await prisma.apiGroup.findMany({
+        })
+        const apiBaseName = await prisma.apiBaseName.findMany({
+        })
+        const apiOrigin = await prisma.apiOrigin.findMany({
+        })
+        const api = await prisma.apiManage.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                origin: true,
+                baseName: true,
+                group: true
+            }
+        })
+        const jsonObj = {
+            apiGroup: (apiGroup || []).map(item => {
+                return {
+                    ...item,
+                    createdAt: undefined,
+                    updateAt: undefined
+
+                }
+            }),
+            apiBaseName: (apiBaseName || []).map(item => {
+                return {
+                    ...item,
+                    createdAt: undefined,
+                    updateAt: undefined
+
+                }
+            }),
+            apiOrigin: (apiOrigin || []).map(item => {
+                return {
+                    ...item,
+                    createdAt: undefined,
+                    updateAt: undefined
+
+                }
+            }),
+            api: (api || []).map(a => {
+                return {
+                    ...a,
+                    groupId: a?.group?.id || null,
+                    baseNameId: a?.baseName?.id || null,
+                    originId: a?.origin?.id || null,
+                    group: undefined,
+                    baseName: undefined,
+                    origin: undefined,
+                    createdAt: undefined,
+                    updateAt: undefined
+                }
+            })
+
+        }
+
+        // res.setHeader('Content-Disposition', contentDisposition('api.json'))
+
+
+        res.json({ data: jsonObj })
+
+    } catch (error) {
+
+    }
+
+})
 
 export default app
