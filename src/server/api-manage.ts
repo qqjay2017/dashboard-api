@@ -307,4 +307,38 @@ app.post("/export", async (req, res) => {
 
 })
 
+app.post("/import", async (req, res) => {
+    try {
+        const body = req.body || {};
+        const { apiGroup = [], apiBaseName = [], apiOrigin = [], api = [] } = body
+        if (apiGroup && apiGroup.length) {
+            await prisma.apiGroup.createMany({
+                data: apiGroup
+            })
+        }
+        if (apiBaseName && apiBaseName.length) {
+            await prisma.apiBaseName.createMany({
+                data: apiBaseName
+            })
+        }
+        if (apiOrigin && apiOrigin.length) {
+            await prisma.apiOrigin.createMany({
+                data: apiOrigin
+            })
+        }
+        if (api && api.length) {
+            await prisma.apiManage.createMany({
+                data: api
+            })
+        }
+
+        res.json({ data: {} })
+    } catch (error: any) {
+
+        res.status(500).json({
+            error: error.message || 'Server error!',
+        })
+    }
+})
+
 export default app
