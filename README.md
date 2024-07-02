@@ -34,3 +34,11 @@ npm run dev
 ```
 npx prisma studio
 ```
+
+
+### .env
+
+```
+POSTGRES_PRISMA_URL="postgresql://postgres:mysecretpassword@localhost:5432/dashboard"
+POSTGRES_URL_NON_POOLING="postgresql://postgres:mysecretpassword@localhost:5432/dashboard"
+```
