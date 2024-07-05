@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(errorMiddleware);
 
 app.use('/dashboard', dashboard)
+app.use('/api//dashboard', dashboard)
 app.use('/api-manage', apiManage)
 app.use('/api-proxy', apiProxy)
 
@@ -26,7 +27,8 @@ app.use(prismaErrorMiddleware)
 app.use(errorHandlerJsonMiddleware());
 
 app.use(function (req, res, next) {
-    res.status(404).json({
+    // res.setHeader("Access-Control-Expose-Headers", "access_Token")
+    res.status(200).json({
         data: {},
         message: "Not Found"
     })

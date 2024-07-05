@@ -10,11 +10,7 @@ export const apiManageSchema = z.object({
     groupId: z.string().optional().nullable(),
     baseNameId: z.string().optional().nullable(),
     originId: z.string().optional().nullable(),
-    headers: z.array(z.object({
-        headerKey: z.string(),
-        headerValue: z.string(),
-        id: z.string(),
-    })),
+    headers: z.string().optional().nullable(),
     isMock: z.boolean().optional(),
     mockJson: z.string().optional(),
 });

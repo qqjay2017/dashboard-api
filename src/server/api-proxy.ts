@@ -103,7 +103,7 @@ app.post(`/proxy`, async (req, res) => {
 
 
         };
-        (apiConfig?.headers || []).forEach((item: any) => {
+        (JSON.parse(apiConfig?.headers || "[]")).forEach((item: any) => {
             allHeaders[item.headerKey] = item.headerValue
         });
         allHeaders = {
