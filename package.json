@@ -7,7 +7,7 @@
     "build": "",
     "start": "ts-node src/index.ts",
     "test": "jest",
-    "postinstall": "prisma generate"
+    "generate": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",
