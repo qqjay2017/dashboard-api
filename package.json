@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node src/index.ts ",
-    "build": "build",
-    "start": "start",
+    "build": "",
+    "start": "ts-node src/index.ts",
     "test": "jest",
     "postinstall": "prisma generate"
   },
