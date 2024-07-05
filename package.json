@@ -4,6 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/index.ts ",
+    "build": "build",
+    "start": "start",
     "test": "jest",
     "postinstall": "prisma generate"
   },
