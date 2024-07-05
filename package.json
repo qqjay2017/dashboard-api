@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.ts ",
+    "dev": "ts-node src/index.ts ",
     "build": "build",
     "start": "start",
     "test": "jest",
