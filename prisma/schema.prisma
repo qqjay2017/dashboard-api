@@ -73,7 +73,7 @@ model ApiManage {
   origin     ApiOrigin?   @relation(fields: [originId], references: [id])
   headers    String?      @db.LongText
   isMock     Boolean?     @default(false)
-  mockJson   String?      @default("{}")
+  mockJson   String?      @db.LongText
 
   @@unique([name])
 }
