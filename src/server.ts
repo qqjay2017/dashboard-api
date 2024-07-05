@@ -18,7 +18,6 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(errorMiddleware);
 
 app.use('/dashboard', dashboard)
-app.use('/api//dashboard', dashboard)
 app.use('/api-manage', apiManage)
 app.use('/api-proxy', apiProxy)
 
