@@ -6,4 +6,4 @@ COPY .env  package.json tsconfig.json ./
 COPY node_modules/ ./node_modules
 COPY prisma/ ./prisma
 COPY src/ ./src
-CMD npm run dev -p 80
+CMD npm run dev
