@@ -8,18 +8,18 @@ datasource db {
 }
 
 model Dashboard {
-  id             Int      @id @default(autoincrement())
-  userId         String
-  createdAt      DateTime @default(now())
-  updateAt       DateTime @default(now())
-  published      Boolean  @default(false)
-  name           String   @unique
-  coverThumbnail String?  @db.LongText
-  description    String   @default("")
-  content        String   @db.LongText
-
-  visits      Int @default(0)
-  submissions Int @default(0)
+  id              Int      @id @default(autoincrement())
+  userId          String
+  createdAt       DateTime @default(now())
+  updateAt        DateTime @default(now())
+  published       Boolean  @default(false)
+  name            String   @unique
+  coverThumbnail  String?  @db.LongText
+  description     String   @default("")
+  content         String   @db.LongText
+  designWidthEnum String   @default("1920")
+  visits          Int      @default(0)
+  submissions     Int      @default(0)
 
   shareURL String @unique @default(uuid())
 

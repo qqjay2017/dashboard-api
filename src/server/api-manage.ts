@@ -252,12 +252,18 @@ app.post("/import", async (req, res, next) => {
         }
         if (api && api.length) {
             await prisma.apiManage.createMany({
-                data: api
+                data: api.map(a => {
+                    return {
+                        ...a,
+                        headers: a.headers && typeof a.headers === 'object' ? JSON.stringify(a.headers) : a.headers
+                    }
+                })
             })
         }
 
         res.json({ data: {} })
     } catch (error) {
+        console.error(error, 'error')
 
         next(error)
     }

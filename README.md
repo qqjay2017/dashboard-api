@@ -3,22 +3,13 @@
 ### 2. Setup PostgreSQL
 
 ```
+npx prisma generate
 npx prisma db push
 ```
 
 
 ```
 npx prisma migrate deploy
-```
-
-- Lastly run the following command to generate Prisma Client.
-
-```
-npx prisma generate
-```
-
-
-```
 npx prisma migrate dev
 ```
 ### 3. Start the REST API server
@@ -42,3 +33,17 @@ npx prisma studio
 POSTGRES_PRISMA_URL="postgresql://postgres:mysecretpassword@localhost:5432/dashboard"
 POSTGRES_URL_NON_POOLING="postgresql://postgres:mysecretpassword@localhost:5432/dashboard"
 ```
+
+
+### 本地起一个mysql
+
+```
+docker run -d \
+  --name mysql5 \
+  -e MYSQL_ROOT_PASSWORD=mysecretpassword \
+  -e MYSQL_USER=postgres \
+  -e MYSQL_PASSWORD=mysecretpassword \
+  -e MYSQL_DATABASE=dashboard \
+  -p 3306:3306 \
+  mysql:5.7
+  ```
