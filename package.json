@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon src/index.ts ",
+    "dev": "cross-env NODE_ENV=production ts-node src/index.ts",
     "build": "",
-    "start": "cross-env NODE_ENV=production ts-node src/index.ts",
+    "start": "cross-env NODE_ENV=development nodemon src/index.ts",
     "test": "jest",
     "postinstall": "prisma generate"
   },
