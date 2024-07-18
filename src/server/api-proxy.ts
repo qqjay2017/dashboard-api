@@ -1,8 +1,9 @@
 import { join } from 'path'
 import express from "express";
 import request from "superagent";
-import { PrismaClient } from '@prisma/client'
+
 import { errorRes } from "../utils";
+import prisma from '../lib/prisma';
 
 
 const headerKeys = [
@@ -55,7 +56,7 @@ const proxyResHeaderKeys = ['access_token',
 const app = express.Router()
 
 
-export const prisma = new PrismaClient()
+
 
 
 

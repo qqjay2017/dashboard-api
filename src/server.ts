@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+
 import helmet from "helmet";
 
 import express from 'express'
@@ -8,7 +8,7 @@ import apiProxy from './server/api-proxy'
 import chart from './server/chart'
 import { errorHandlerJsonMiddleware, prismaErrorMiddleware, } from './middleware';
 
-export const prisma = new PrismaClient()
+
 const app = express()
 
 app.use(helmet())

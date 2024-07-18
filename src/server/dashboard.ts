@@ -1,10 +1,11 @@
 import express from "express";
-import { PrismaClient } from '@prisma/client'
+
 import { getUpdateAt } from "../utils";
+import prisma from "../lib/prisma";
 const app = express.Router()
 
 
-export const prisma = new PrismaClient()
+
 
 // 列表
 app.get(`/`, async (req, res) => {

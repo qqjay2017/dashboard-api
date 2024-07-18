@@ -1,9 +1,10 @@
 
 import express from "express";
-import { PrismaClient } from '@prisma/client'
+
 import { getUpdateAt } from "../utils";
+import prisma from "../lib/prisma";
 const app = express.Router()
-export const prisma = new PrismaClient()
+
 
 // 列表
 app.get(`/`, async (req, res) => {
@@ -35,6 +36,7 @@ app.get(`/:id`, async (req, res) => {
 // 新增
 app.post(`/`, async (req, res) => {
     const body = req.body;
+    console.log(body, 'body')
     const result = await prisma.componentChart.create({
         data: {
             ...body

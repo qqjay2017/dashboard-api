@@ -1,13 +1,14 @@
 import express from "express";
-import { PrismaClient } from '@prisma/client'
+
 import { apiManageSchema } from "../schemas";
 import { errorRes } from "../utils";
 import { getUpdateAt } from "../utils";
 import contentDisposition from 'content-disposition'
+import prisma from "../lib/prisma";
 const app = express.Router()
 
 
-export const prisma = new PrismaClient()
+
 
 
 
