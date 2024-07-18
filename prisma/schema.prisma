@@ -13,7 +13,7 @@ model Dashboard {
   createdAt       DateTime @default(now())
   updateAt        DateTime @default(now())
   published       Boolean  @default(false)
-  name            String   @unique
+  name            String
   coverThumbnail  String?  @db.LongText
   description     String   @default("")
   content         String   @db.LongText
@@ -23,7 +23,7 @@ model Dashboard {
 
   shareURL String @unique @default(uuid())
 
-  @@unique([name, userId])
+  @@unique([name])
 }
 
 model ApiGroup {
@@ -74,6 +74,19 @@ model ApiManage {
   headers    String?      @db.LongText
   isMock     Boolean?     @default(false)
   mockJson   String?      @db.LongText
+
+  @@unique([name])
+}
+
+model ComponentChart {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @default(now())
+  published   Boolean  @default(false)
+  name        String
+  description String   @default("")
+  template    String   @db.LongText
+  shareURL    String   @unique @default(uuid())
 
   @@unique([name])
 }
