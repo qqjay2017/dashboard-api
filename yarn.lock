@@ -787,15 +787,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^5.15.0":
-  version: 5.15.0
-  resolution: "@prisma/client@npm:5.15.0"
+"@prisma/client@npm:^5.17.0":
+  version: 5.17.0
+  resolution: "@prisma/client@npm:5.17.0"
   peerDependencies:
     prisma: "*"
   peerDependenciesMeta:
     prisma:
       optional: true
-  checksum: ecd90ad9ed292f8128f37127cfd11515b48c2ed4ea9eb9318a0c3adf2058c8dc4258e24f1036804cb8134e85651bcb998af7db0e62ca20195edddba0e094673e
+  checksum: 768bd4116ff3ab82039f63d9c2b135c5cef4166d47f07f5ef3c054e5d6fd95f0b07cc63aa32c218534c7471292b18ca30deb6f46d22de924520778b8cb1227f9
   languageName: node
   linkType: hard
 
@@ -3850,7 +3850,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "postgis-express@workspace:."
   dependencies:
-    "@prisma/client": "npm:^5.15.0"
+    "@prisma/client": "npm:^5.17.0"
     "@types/body-parser": "npm:1.19.5"
     "@types/content-disposition": "npm:^0.5.8"
     "@types/express": "npm:4.17.21"

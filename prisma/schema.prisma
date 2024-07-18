@@ -84,9 +84,9 @@ model ComponentChart {
   updateAt    DateTime @default(now())
   published   Boolean  @default(false)
   name        String
+  type        String   @default("other")
   description String   @default("")
   template    String   @db.LongText
-  shareURL    String   @unique @default(uuid())
 
   @@unique([name])
 }

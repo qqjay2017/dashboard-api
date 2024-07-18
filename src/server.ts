@@ -5,6 +5,7 @@ import express from 'express'
 import dashboard from './server/dashboard'
 import apiManage from './server/api-manage'
 import apiProxy from './server/api-proxy'
+import chart from './server/chart'
 import { errorHandlerJsonMiddleware, prismaErrorMiddleware, } from './middleware';
 
 export const prisma = new PrismaClient()
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/dashboard', dashboard)
 app.use('/api-manage', apiManage)
 app.use('/api-proxy', apiProxy)
+app.use('/chart', chart)
 
 
 app.use(prismaErrorMiddleware)
