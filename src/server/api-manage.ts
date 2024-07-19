@@ -3,7 +3,7 @@ import express from "express";
 import { apiManageSchema } from "../schemas";
 import { errorRes } from "../utils";
 import { getUpdateAt } from "../utils";
-import contentDisposition from 'content-disposition'
+
 import prisma from "../lib/prisma";
 const app = express.Router()
 
@@ -237,29 +237,80 @@ app.post("/import", async (req, res, next) => {
         const body = req.body || {};
         const { apiGroup = [], apiBaseName = [], apiOrigin = [], api = [] } = body
         if (apiGroup && apiGroup.length) {
-            await prisma.apiGroup.createMany({
-                data: apiGroup
-            })
-        }
-        if (apiBaseName && apiBaseName.length) {
-            await prisma.apiBaseName.createMany({
-                data: apiBaseName
-            })
-        }
-        if (apiOrigin && apiOrigin.length) {
-            await prisma.apiOrigin.createMany({
-                data: apiOrigin
-            })
-        }
-        if (api && api.length) {
-            await prisma.apiManage.createMany({
-                data: api.map(a => {
-                    return {
-                        ...a,
-                        headers: a.headers && typeof a.headers === 'object' ? JSON.stringify(a.headers) : a.headers
+            await Promise.all(apiGroup.map((group) => {
+                return new Promise(async (resolve) => {
+                    try {
+                        await prisma.apiGroup.create({
+                            data: group
+                        })
+                    } catch (error) {
+
+                    } finally {
+
+                        resolve({})
                     }
                 })
-            })
+            }))
+
+        }
+        if (apiBaseName && apiBaseName.length) {
+            await Promise.all(apiBaseName.map((basename) => {
+                return new Promise(async (resolve) => {
+
+                    try {
+                        const d = await prisma.apiBaseName.create({
+                            data: basename
+                        })
+
+
+                    } catch (error) {
+
+
+
+                    } finally {
+                        resolve({})
+                    }
+
+                })
+            }))
+        }
+        if (apiOrigin && apiOrigin.length) {
+            // await prisma.apiOrigin.createMany({
+            //     data: apiOrigin
+            // })
+
+            await Promise.all(apiOrigin.map((origin) => {
+                return new Promise(async (resolve) => {
+                    try {
+                        await prisma.apiOrigin.create({
+                            data: origin
+                        })
+                    } catch (error) {
+
+                    } finally {
+                        resolve({})
+                    }
+                })
+            }))
+        }
+        if (api && api.length) {
+            await Promise.all(api.map(a => {
+                return new Promise(async (resolve) => {
+                    try {
+                        await prisma.apiManage.create({
+                            data: {
+                                ...a,
+                                headers: a.headers && typeof a.headers === 'object' ? JSON.stringify(a.headers) : a.headers
+                            }
+                        })
+                    } catch (error) {
+
+                    } finally {
+                        resolve({})
+                    }
+                })
+            }))
+
         }
 
         res.json({ data: {} })
