@@ -97,7 +97,7 @@ app.post(`/proxy`, async (req, res) => {
         const origin = apiConfig?.origin?.origin || originParam;
         const method = (apiConfig?.method || 'get').toLowerCase()
         const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '');
-        console.log(url, method, 'url')
+
         const requestIns = request(method, url)
         let allHeaders = {
             ...req.headers,

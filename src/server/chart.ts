@@ -36,7 +36,7 @@ app.get(`/:id`, async (req, res) => {
 // 新增
 app.post(`/`, async (req, res) => {
     const body = req.body;
-    console.log(body, 'body')
+
     const result = await prisma.componentChart.create({
         data: {
             ...body
