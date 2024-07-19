@@ -8,10 +8,15 @@ const app = express.Router()
 
 // 列表
 app.get(`/`, async (req, res) => {
+    const type = req.query.type || ''
     const list = await prisma.componentChart.findMany({
         orderBy: {
-            createdAt: 'desc'
+            updateAt: 'desc'
         },
+        where: type ? {
+            type: String(type)
+        } : {}
+
 
 
     })
