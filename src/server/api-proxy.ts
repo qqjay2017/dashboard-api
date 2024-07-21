@@ -61,7 +61,7 @@ const app = express.Router()
 
 
 
-// 新增
+// 代理过去
 app.post(`/proxy`, async (req, res) => {
     try {
         const body = req.body;
@@ -99,6 +99,7 @@ app.post(`/proxy`, async (req, res) => {
         const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '');
 
         const requestIns = request(method, url)
+
         let allHeaders = {
             ...req.headers,
 
@@ -115,7 +116,9 @@ app.post(`/proxy`, async (req, res) => {
         return handleProxy({
             requestIns,
             allHeaders,
-            res
+            res,
+            data
+
         })
     } catch (e: any) {
 
@@ -192,7 +195,8 @@ app.post('/proxy-test', async (req, res) => {
 async function handleProxy({
     allHeaders,
     requestIns,
-    res
+    res,
+    data
 }: any) {
     Reflect.ownKeys(allHeaders).forEach((k) => {
         const key = String(k).toLowerCase();
@@ -200,6 +204,9 @@ async function handleProxy({
             requestIns.set(key, String(allHeaders[key]))
         }
     })
+    if (data) {
+        requestIns.send(data)
+    }
     const proxyRes = await requestIns
     Reflect.ownKeys(proxyRes.headers).forEach((k) => {
         const key = String(k)
