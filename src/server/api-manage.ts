@@ -106,11 +106,7 @@ app.get('/list', async (req, res) => {
         orderBy: {
             createdAt: 'desc'
         },
-        include: {
-            origin: true,
-            baseName: true,
-            group: true
-        }
+
 
     })
 
@@ -124,11 +120,7 @@ app.get('/:id', async (req, res) => {
         where: {
             id: id
         },
-        include: {
-            origin: true,
-            baseName: true,
-            group: true
-        }
+
 
     })
 
@@ -178,11 +170,7 @@ app.post("/export", async (req, res) => {
         orderBy: {
             createdAt: 'desc'
         },
-        include: {
-            origin: true,
-            baseName: true,
-            group: true
-        }
+
     })
     const jsonObj = {
         apiGroup: (apiGroup || []).map(item => {
@@ -212,12 +200,7 @@ app.post("/export", async (req, res) => {
         api: (api || []).map(a => {
             return {
                 ...a,
-                groupId: a?.group?.id || null,
-                baseNameId: a?.baseName?.id || null,
-                originId: a?.origin?.id || null,
-                group: undefined,
-                baseName: undefined,
-                origin: undefined,
+
                 createdAt: undefined,
                 updateAt: undefined
             }

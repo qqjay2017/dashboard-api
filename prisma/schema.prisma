@@ -27,31 +27,28 @@ model Dashboard {
 }
 
 model ApiGroup {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updateAt  DateTime    @default(now())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now())
   name      String
-  ApiManage ApiManage[]
 
   @@unique([name])
 }
 
 model ApiBaseName {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updateAt  DateTime    @default(now())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now())
   baseName  String
-  ApiManage ApiManage[]
 
   @@unique([baseName])
 }
 
 model ApiOrigin {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updateAt  DateTime    @default(now())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now())
   origin    String
-  ApiManage ApiManage[]
 
   @@unique([origin])
 }
@@ -63,17 +60,15 @@ model ApiManage {
   name        String
   description String   @default("")
 
-  url        String
-  method     String
-  groupId    String?
-  group      ApiGroup?    @relation(fields: [groupId], references: [id])
-  baseNameId String?
-  baseName   ApiBaseName? @relation(fields: [baseNameId], references: [id])
-  originId   String?
-  origin     ApiOrigin?   @relation(fields: [originId], references: [id])
-  headers    String?      @db.LongText
-  isMock     Boolean?     @default(false)
-  mockJson   String?      @db.LongText
+  url      String
+  method   String
+  group    String?
+  baseName String?
+  origin   String?
+
+  headers  String?  @db.LongText
+  isMock   Boolean? @default(false)
+  mockJson String?  @db.LongText
 
   @@unique([name])
 }

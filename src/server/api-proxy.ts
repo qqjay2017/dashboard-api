@@ -76,10 +76,7 @@ app.post(`/proxy`, async (req, res) => {
             where: {
                 id: apiId
             },
-            include: {
-                origin: true,
-                baseName: true
-            }
+
         });
         if (!apiConfig) {
             return errorRes({
@@ -94,9 +91,9 @@ app.post(`/proxy`, async (req, res) => {
         }
 
         // 请求域名
-        const origin = apiConfig?.origin?.origin || originParam;
+        const origin = apiConfig?.origin || originParam;
         const method = (apiConfig?.method || 'get').toLowerCase()
-        const url = origin + join(apiConfig?.baseName?.baseName || '', apiConfig?.url || '');
+        const url = origin + join(apiConfig?.baseName || '', apiConfig?.url || '');
 
         const requestIns = request(method, url)
 
