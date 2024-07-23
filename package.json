@@ -8,7 +8,7 @@
     "start": "cross-env NODE_ENV=development nodemon src/index.ts",
     "test": "jest",
     "postinstall": "prisma generate",
-    "preinstall": "export PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 PRISMA_QUERY_ENGINE_LIBARY=./src/engines/libquery_engine-darwin-arm64.dylib.node"
+    "preinstall": "cross-env  PRISMA_ENGINES_MIRROR=https://registry.npmmirror.com/-/binary/prisma"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
