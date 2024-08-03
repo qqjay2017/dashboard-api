@@ -20,7 +20,7 @@ model Dashboard {
   designWidthEnum String   @default("1920")
   visits          Int      @default(0)
   submissions     Int      @default(0)
-
+  appGroupName  String?
   shareURL String @unique @default(uuid())
 
   @@unique([name])
@@ -83,6 +83,30 @@ model ComponentChart {
   description    String   @default("")
   template       String   @db.LongText
   coverThumbnail String?  @db.LongText
+
+  @@unique([name])
+}
+
+
+model AppGroup {
+  id         Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now())
+  icon String ?
+  name     String ?
+  description    String ?  @default("")
+
+  @@unique([name])
+}
+
+model ApiFilter {
+  id         Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now())
+  
+  name     String ?
+  description    String ?  @default("")
+   template       String   @db.LongText
 
   @@unique([name])
 }

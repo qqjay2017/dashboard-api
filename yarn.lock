@@ -442,6 +442,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^8.4.1":
+  version: 8.4.1
+  resolution: "@faker-js/faker@npm:8.4.1"
+  checksum: e4e6e520690a77fcb0eb88c4a41d5accf4cf45f235c7d4b7ef0c9cea5e79a24ff074da21771cc72071f0b03d796c46cb88d5669e7586cd1b50fe1e309a37ba37
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -3850,6 +3857,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "postgis-express@workspace:."
   dependencies:
+    "@faker-js/faker": "npm:^8.4.1"
     "@prisma/client": "npm:^5.17.0"
     "@types/body-parser": "npm:1.19.5"
     "@types/content-disposition": "npm:^0.5.8"
